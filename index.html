@@ -87,6 +87,7 @@
         
         .action-btn-sm { background: #e6f9ef; color: var(--grab-green); border: 1px solid var(--grab-green); padding: 8px 16px; border-radius: var(--radius-sm); font-family: var(--font); font-size: 12px; font-weight: 800; cursor: pointer; margin-top: 10px; display: inline-block; pointer-events: auto !important; }
         .result-msg { margin-top: 12px; font-weight: 800; text-align: center; font-size: 14px; }
+        .live-status-note { font-size: 11px; color: var(--grab-green); margin-top: 8px; font-weight: 700; text-align: center; display: none; }
     </style>
 </head>
 <body>
@@ -181,6 +182,7 @@
                 </div>
                 <button type="button" class="checkout-btn" style="width:100%; margin-top:4px;" onclick="checkStatus(); startAutoCheck();">Semak Sekarang</button>
                 <div id="statusResult" class="result-msg"></div>
+                <div id="liveNote" class="live-status-note">🔄 Live: Status dikemaskini automatik</div>
             </div>
         </div>
     </div>
@@ -206,6 +208,7 @@
         
         if (tabId !== 'trackTab' && window.autoRefreshInterval) {
             clearInterval(window.autoRefreshInterval);
+            document.getElementById('liveNote').style.display = 'none';
         }
     }
 
@@ -302,6 +305,9 @@
     function startAutoCheck() {
         if (window.autoRefreshInterval) clearInterval(window.autoRefreshInterval);
         
+        // Paparkan nota live aktif
+        document.getElementById('liveNote').style.display = 'block';
+
         window.autoRefreshInterval = setInterval(() => {
             const id = document.getElementById('orderIdInput').value.trim();
             if (id) {
@@ -361,11 +367,4 @@
             }
         } catch (err) {
             if (showAlerts) {
-                resultDiv.style.color = 'red';
-                resultDiv.innerText = 'Pelayan tidak dijumpai. Pastikan sistem aktif.';
-            }
-        }
-    }
-</script>
-</body>
-</html>
+                resultDiv.style.col
