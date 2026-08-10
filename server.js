@@ -33,6 +33,10 @@ app.get('/check-status/:id', (req, res) => {
     }
 });
 
+app.get('/debug-orders', (req, res) => {
+    res.status(200).json(orderDatabase);
+});
+
 const PORT = process.env.PORT || 10000;
 app.listen(PORT, '0.0.0.0', () => {
     console.log(`Pelayan Ayenn berjalan di hos 0.0.0.0 pada port ${PORT}`);
