@@ -228,7 +228,7 @@
 
     let lastGeneratedId = '';
 
-    document.getElementById('orderForm').addEventListener('submit', function(e) {
+    document.getElementById('orderForm').addEventListener('submit', async function(e) {
         e.preventDefault();
         const selectedRadio = document.querySelector('input[name="product"]:checked');
         const productName = selectedRadio ? selectedRadio.value : 'Ketam Nipah Saiz L';
@@ -258,11 +258,11 @@
         resultDiv.style.color = '#666';
         resultDiv.innerText = 'AI sedang menyemak kesahihan resit...';
 
-        fetch(MAKE_WEBHOOK_URL, {
-            method: 'POST',
-            body: formData
-        })
-        .then(async response => {
+        try {
+            const response = await fetch(MAKE_WEBHOOK_URL, {
+                method: 'POST',
+                body: formData
+            });
             let responseText = await response.text();
             try {
                 const jsonObj = JSON.parse(responseText);
@@ -273,11 +273,12 @@
             let aiStatus = isRejected ? 'DITOLAK' : 'DITERIMA & DALAM PROSES';
             let aiReason = responseText || 'Resit tidak sah atau bukan resit pembayaran.';
 
-            fetch(`${BACKEND_URL}/update-status`, {
+            // Tunggu sehingga status betul-betul dikemas kini ke backend pelayan
+            await fetch(`${BACKEND_URL}/update-status`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ orderId, status: aiStatus, reason: aiReason })
-            }).catch(err => console.log('Gagal hantar ke backend'));
+            });
 
             if (aiStatus === 'DITOLAK') {
                 resultDiv.style.color = 'red';
@@ -288,11 +289,10 @@
             }
             
             document.getElementById('orderForm').reset();
-        })
-        .catch(error => {
+        } catch (error) {
             resultDiv.style.color = 'red';
             resultDiv.innerText = 'Ralat sambungan. Sila cuba lagi.';
-        });
+        }
     });
 
     function copyOrderId() {
@@ -305,7 +305,6 @@
     function startAutoCheck() {
         if (window.autoRefreshInterval) clearInterval(window.autoRefreshInterval);
         
-        // Paparkan nota live aktif
         document.getElementById('liveNote').style.display = 'block';
 
         window.autoRefreshInterval = setInterval(() => {
@@ -367,4 +366,4 @@
             }
         } catch (err) {
             if (showAlerts) {
-                resultDiv.style.col
+                resultD
