@@ -42,7 +42,7 @@
             position: relative;
         }
         
-        .status-bar { position: sticky; top: 0; z-index: 1000; background: var(--grab-green); padding: 12px 20px; display: flex; align-items: center; justify-content: space-between; }
+        .status-bar { position: sticky; top: 0; z-index: 100; background: var(--grab-green); padding: 12px 20px; display: flex; align-items: center; justify-content: space-between; }
         .status-left { display: flex; align-items: center; gap: 10px; }
         .status-indicator { width: 10px; height: 10px; border-radius: 50%; background: #ffffff; animation: statusPulse 2s ease-in-out infinite; }
         @keyframes statusPulse { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.6; transform: scale(0.85); } }
@@ -66,7 +66,7 @@
         .section-title { font-size: 13px; font-weight: 800; color: var(--text-secondary); text-transform: uppercase; margin-bottom: 12px; }
         
         .product-grid { display: grid; grid-template-columns: 1fr; gap: 10px; margin-bottom: 16px; }
-        .product-option { display: flex; align-items: center; justify-content: space-between; padding: 14px 16px; background: var(--bg-alt); border: 2px solid var(--border); border-radius: var(--radius-md); cursor: pointer; pointer-events: auto !important; position: relative; z-index: 5; }
+        .product-option { display: flex; align-items: center; justify-content: space-between; padding: 14px 16px; background: var(--bg-alt); border: 2px solid var(--border); border-radius: var(--radius-md); cursor: pointer; }
         .product-option.selected { border-color: var(--grab-green); background: #f0fdf4; }
         .product-info h4 { font-size: 14px; font-weight: 800; color: var(--text-dark); }
         .product-info p { font-size: 12px; color: var(--text-muted); }
@@ -74,18 +74,18 @@
         
         .form-group { margin-bottom: 16px; }
         .form-label { display: block; font-size: 13px; font-weight: 700; color: var(--text-secondary); margin-bottom: 6px; }
-        .form-input { width: 100%; padding: 12px 16px; background: var(--bg-alt); border: 2px solid var(--border); border-radius: var(--radius-md); font-family: var(--font); font-size: 14px; font-weight: 600; color: var(--text-dark); pointer-events: auto !important; position: relative; z-index: 5; }
+        .form-input { width: 100%; padding: 12px 16px; background: var(--bg-alt); border: 2px solid var(--border); border-radius: var(--radius-md); font-family: var(--font); font-size: 14px; font-weight: 600; color: var(--text-dark); }
         
         .summary-row { display: flex; justify-content: space-between; align-items: center; padding: 8px 0; font-size: 13px; font-weight: 600; color: var(--text-secondary); }
         .summary-row.total { border-top: 2px dashed var(--border); margin-top: 8px; padding-top: 12px; font-size: 16px; font-weight: 900; color: var(--text-dark); }
         .summary-row.total .total-price { color: var(--grab-green); font-size: 20px; }
         
-        .checkout-bar { position: fixed; bottom: 0; left: 0; right: 0; background: var(--white); padding: 16px 20px; box-shadow: 0 -4px 20px rgba(0,0,0,0.1); display: flex; align-items: center; justify-content: space-between; z-index: 999; border-top: 1px solid var(--border); }
+        .checkout-bar { position: fixed; bottom: 0; left: 0; right: 0; background: var(--white); padding: 16px 20px; box-shadow: 0 -4px 20px rgba(0,0,0,0.1); display: flex; align-items: center; justify-content: space-between; z-index: 500; border-top: 1px solid var(--border); }
         .checkout-info span { font-size: 11px; color: var(--text-muted); font-weight: 700; text-transform: uppercase; display: block; }
         .checkout-info h3 { font-size: 18px; font-weight: 900; color: var(--text-dark); }
-        .checkout-btn { background: linear-gradient(135deg, #00B14F 0%, #008038 100%); color: #ffffff; border: none; padding: 14px 28px; border-radius: var(--radius-md); font-family: var(--font); font-size: 14px; font-weight: 800; cursor: pointer; box-shadow: var(--shadow-glow); pointer-events: auto !important; position: relative; z-index: 1000; }
+        .checkout-btn { background: linear-gradient(135deg, #00B14F 0%, #008038 100%); color: #ffffff; border: none; padding: 14px 28px; border-radius: var(--radius-md); font-family: var(--font); font-size: 14px; font-weight: 800; cursor: pointer; box-shadow: var(--shadow-glow); }
         
-        .action-btn-sm { background: #e6f9ef; color: var(--grab-green); border: 1px solid var(--grab-green); padding: 8px 16px; border-radius: var(--radius-sm); font-family: var(--font); font-size: 12px; font-weight: 800; cursor: pointer; margin-top: 10px; display: inline-block; pointer-events: auto !important; }
+        .action-btn-sm { background: #e6f9ef; color: var(--grab-green); border: 1px solid var(--grab-green); padding: 8px 16px; border-radius: var(--radius-sm); font-family: var(--font); font-size: 12px; font-weight: 800; cursor: pointer; margin-top: 10px; display: inline-block; }
         .result-msg { margin-top: 12px; font-weight: 800; text-align: center; font-size: 14px; }
         .live-status-note { font-size: 11px; color: var(--grab-green); margin-top: 8px; font-weight: 700; text-align: center; display: none; }
     </style>
@@ -273,7 +273,6 @@
             let aiStatus = isRejected ? 'DITOLAK' : 'DITERIMA & DALAM PROSES';
             let aiReason = responseText || 'Resit tidak sah atau bukan resit pembayaran.';
 
-            // Tunggu sehingga status betul-betul dikemas kini ke backend pelayan
             await fetch(`${BACKEND_URL}/update-status`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -366,4 +365,12 @@
             }
         } catch (err) {
             if (showAlerts) {
-                resultD
+                resultDiv.style.color = 'red';
+                resultDiv.innerText = 'Pelayan tidak dijumpai. Pastikan sistem aktif.';
+            }
+        }
+    }
+</script>
+</body>
+                            </html>
+                            
